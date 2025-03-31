@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Category } from "src/category/category.entity";
+import { Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Treatments {
@@ -10,6 +11,9 @@ export class Treatments {
 
     @Column({ type: 'tinyint', default: 1 })
     isActive: boolean;
+
+    @ManyToOne(() => Category, (category) => category.treatments)
+    category: Category;
 
     @CreateDateColumn()
     createdAt: Date;

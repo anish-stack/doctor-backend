@@ -2,6 +2,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MailerModule } from '@nestjs-modules/mailer';
 import { AuthModule } from './auth/auth.module';
 import { BlogModule } from './blog/blog.module';
 import { DoctorModule } from './doctor/doctor.module';
@@ -39,6 +40,15 @@ import { ReviewModule } from './review/review.module';
         synchronize: true,
       }),
     }),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
+    }),
     AuthModule,
     BlogModule,
     DoctorModule,
@@ -47,7 +57,7 @@ import { ReviewModule } from './review/review.module';
     DoctorSubscriptionModule,
     SubscriptionModule,
     MedicineModule,
-    
+
     TreatmentsModule,
     HospitalModule,
     MedicineCategoryModule,

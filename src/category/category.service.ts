@@ -33,9 +33,7 @@ export class CategoryService {
         return this.categoryRepository.findOne({ where: { id } });
     }
 
-    // async findByTreatmentId(id: number) {
-    //     return this.categoryRepository.find({ where: { treatmentId: id } });
-    // }
+  
 
 
     async update(id: number, createCategoryDto: Category, filePath?: string) {

@@ -25,11 +25,8 @@ export class Doctor {
   @Column({ nullable: true })
   expertiseId: string;
 
-
-  
   @Column({ type: 'varchar', nullable: true })
   hospitalId: number;
-
 
   @Column({ type: 'bigint', unsigned: true })
   userId: number;

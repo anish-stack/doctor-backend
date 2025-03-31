@@ -7,6 +7,8 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailerUtil } from 'utils/SendEmail';
 
 @Module({
   imports: [
@@ -20,9 +22,10 @@ import { JwtStrategy } from './jwt.strategy';
         signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES') },
       }),
     }),
+    MailerModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy,MailerUtil],
   exports: [AuthService],
 })
 export class AuthModule { }

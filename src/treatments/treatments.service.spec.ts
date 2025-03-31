@@ -1,18 +1,47 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { TreatmentsService } from './treatments.service';
+import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Treatments } from './treatments.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { treatmentsDto } from './treatments.dto';
+import { Category } from 'src/category/category.entity';
 
-describe('TreatmentsService', () => {
-  let service: TreatmentsService;
+@Injectable()
+export class TreatmentsService {
+  constructor(
+    @InjectRepository(Treatments)
+    private readonly treatmentsRepository: Repository<Treatments>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
+  ) {}
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [TreatmentsService],
-    }).compile();
+  findAll() {
+    return this.treatmentsRepository.find({ relations: ['category'] });
+  }
 
-    service = module.get<TreatmentsService>(TreatmentsService);
-  });
+  async create(treatmentsDto: treatmentsDto) {
+    const category = await this.categoryRepository.findOne({ where: { id: treatmentsDto.category } });
+    if (!category) {
+      throw new Error('Category not found');
+    }
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-});
+    const treatment = this.treatmentsRepository.create({
+      name: treatmentsDto.name,
+      isActive: treatmentsDto.isActive,
+      category,
+    });
+
+    return this.treatmentsRepository.save(treatment);
+  }
+
+  findOne(id: number) {
+    return this.treatmentsRepository.findOne({ where: { id }, relations: ['category'] });
+  }
+
+  update(id: number, name: string) {
+    return this.treatmentsRepository.update(id, { name });
+  }
+
+  delete(id: number) {
+    return this.treatmentsRepository.delete(id);
+  }
+}
